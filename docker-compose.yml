@@ -54,17 +54,6 @@ services:
     networks:
       - bioskop-net
 
-  # --- Database 3: MongoDB ---
-  mongo-db:
-    image: mongo:latest
-    container_name: mongoo-db
-    ports:
-      - "27018:27017"
-    volumes:
-      - mongo_data:/data/db
-    networks:
-      - bioskop-net
-
   # --- SERVICE 4: Analytics (Python) ---
   analytics-app:
     build: ./analytics-service
@@ -88,10 +77,39 @@ services:
     build: ./auth-service
     ports:
       - "3001:3001"
+    environment:
+      - MONGO_URI=mongodb://mongo-db:27017/bioskop_auth
     depends_on:
       - mongo-db
     networks:
-      - bioskop-net  # <--- PERBAIKAN DISINI (Disamakan dengan network database)
+      - bioskop-net
+
+  # --- Database 3: MongoDB ---
+  mongo-db:
+    image: mongo:latest
+    # JANGAN ADA container_name DISINI AGAR OTOMATIS
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - bioskop-net
+
+  # --- WEB ADMIN MONGODB ---
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - "8090:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo-db
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=pass
+    depends_on:
+      - mongo-db
+    networks:
+      - bioskop-net
 
 volumes:
   mongo_data:
@@ -99,4 +117,3 @@ volumes:
 networks:
   bioskop-net:
     driver: bridge
-  # app-network dihapus karena semua sudah masuk bioskop-net
