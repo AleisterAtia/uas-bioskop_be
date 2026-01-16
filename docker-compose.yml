@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  # --- Service 1: PHP App ---
+  movie-catalog:
+    build: ./movie-catalog
+    ports:
+      - "8001:80"
+    depends_on:
+      - mysql-db
+    networks:
+      - bioskop-net
+
+  # --- Database 1: MySQL ---
+  mysql-db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bioskop_catalog
+    volumes:
+      - ./movie-catalog/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - bioskop-net
+
+  # --- Service 2: C# App ---
+  booking-app:
+    build: ./booking-seat
+    ports:
+      - "8002:80"
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - DB_CONNECTION_STRING=Server=mssql-db;Database=BookingDB;User Id=sa;Password=Mypassw0rd!;TrustServerCertificate=True;
+    depends_on:
+      - mssql-db
+    networks:
+      - bioskop-net
+
+  # --- Database 2: SQL Server (MSSQL) ---
+  mssql-db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Mypassw0rd!
+    networks:
+      - bioskop-net
+
+  # --- SERVICE 3: Payment (Node.js) ---
+  payment-app:
+    build: ./payment-service
+    ports:
+      - "8003:3000"
+    depends_on:
+      - mongo-db
+    networks:
+      - bioskop-net
+
+  # --- Database 3: MongoDB ---
+  mongo-db:
+    image: mongo:latest
+    container_name: mongoo-db
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - bioskop-net
+
+  # --- SERVICE 4: Analytics (Python) ---
+  analytics-app:
+    build: ./analytics-service
+    ports:
+      - "8004:5000"
+    depends_on:
+      - influx-db
+    networks:
+      - bioskop-net
+
+  # --- Database 4: InfluxDB ---
+  influx-db:
+    image: influxdb:1.8
+    environment:
+      - INFLUXDB_DB=bioskop_analytics
+    networks:
+      - bioskop-net
+
+  # --- SERVICE 5: Auth Service (Node.js) ---
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongo-db
+    networks:
+      - bioskop-net  # <--- PERBAIKAN DISINI (Disamakan dengan network database)
+
+volumes:
+  mongo_data:
+
+networks:
+  bioskop-net:
+    driver: bridge
+  # app-network dihapus karena semua sudah masuk bioskop-net

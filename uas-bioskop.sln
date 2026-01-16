@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "booking-seat", "booking-seat", "{22B36AA9-4519-DFAD-1982-570EB7A293EF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2C27FD4B-C06A-A762-B986-48F5AC3F12DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingApp", "booking-seat\src\BookingApp.csproj", "{16D94955-560D-C421-CBCF-497E65E70BBD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{16D94955-560D-C421-CBCF-497E65E70BBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16D94955-560D-C421-CBCF-497E65E70BBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16D94955-560D-C421-CBCF-497E65E70BBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16D94955-560D-C421-CBCF-497E65E70BBD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2C27FD4B-C06A-A762-B986-48F5AC3F12DC} = {22B36AA9-4519-DFAD-1982-570EB7A293EF}
+		{16D94955-560D-C421-CBCF-497E65E70BBD} = {2C27FD4B-C06A-A762-B986-48F5AC3F12DC}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6680E509-01CF-43AE-8141-8CD177221314}
+	EndGlobalSection
+EndGlobal
